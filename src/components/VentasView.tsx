@@ -237,9 +237,9 @@ export function VentasView() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-DO', {
+    return new Intl.NumberFormat('es-BO', {
       style: 'currency',
-      currency: 'DOP',
+      currency: 'BOB',
     }).format(amount);
   };
 
@@ -349,7 +349,7 @@ export function VentasView() {
                   <Label htmlFor="tipo_pago">Tipo de Pago *</Label>
                   <Select
                     value={formData.tipo_pago}
-                    onValueChange={(value: 'contado' | 'credito') => 
+                    onValueChange={(value: 'contado' | 'credito') =>
                       setFormData({ ...formData, tipo_pago: value })
                     }
                     required

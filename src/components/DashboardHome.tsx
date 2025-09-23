@@ -87,9 +87,9 @@ export function DashboardHome() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-DO', {
+    return new Intl.NumberFormat('es-BO', {
       style: 'currency',
-      currency: 'DOP',
+      currency: 'BOB',
     }).format(amount);
   };
 
@@ -206,27 +206,7 @@ export function DashboardHome() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Bienvenido al Sistema Monte Sagrado</CardTitle>
-          <CardDescription>
-            Sistema integral de gestión para el cementerio Monte Sagrado
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Este sistema te permite gestionar de manera eficiente todas las operaciones del cementerio:
-            </p>
-            <ul className="text-sm space-y-2 text-muted-foreground">
-              <li>• <strong>Clientes:</strong> Registro completo de información de clientes</li>
-              <li>• <strong>Terrenos:</strong> Gestión de lotes, nichos, bóvedas y mausoleos</li>
-              <li>• <strong>Ventas:</strong> Procesamiento de ventas al contado y a crédito</li>
-              <li>• <strong>Historial:</strong> Seguimiento completo de operaciones</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
+
     </div>
   );
 }
