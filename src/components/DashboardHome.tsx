@@ -56,14 +56,34 @@ export function DashboardHome() {
       const currentMonth = currentDate.getMonth() + 1;
       const currentYear = currentDate.getFullYear();
 
-      const { data: ventasMesData } = await supabase
+      // Obtener ventas al contado del mes (se incluye el monto completo)
+      const { data: ventasContadoData } = await supabase
         .from('ventas')
         .select('precio_total')
+        .eq('tipo_pago', 'contado')
         .gte('fecha_venta', `${currentYear}-${String(currentMonth).padStart(2, '0')}-01`)
         .lt('fecha_venta', `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`)
         .neq('estado', 'cancelada');
 
-      const ingresosMensuales = ventasMesData?.reduce((sum, venta) => sum + Number(venta.precio_total), 0) || 0;
+      // Obtener pagos realmente efectuados en el mes para ventas a crédito
+      const { data: pagosCreditoData } = await supabase
+        .from('pagos_credito')
+        .select('monto_pagado')
+        .not('fecha_pago', 'is', null)
+        .gte('fecha_pago', `${currentYear}-${String(currentMonth).padStart(2, '0')}-01`)
+        .lt('fecha_pago', `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`);
+
+      const ingresosContado = ventasContadoData?.reduce((sum, venta) => sum + Number(venta.precio_total), 0) || 0;
+      const ingresosCredito = pagosCreditoData?.reduce((sum, pago) => sum + Number(pago.monto_pagado), 0) || 0;
+      const ingresosMensuales = ingresosContado + ingresosCredito;
+
+      // Para las ventas del mes, contar todas las ventas sin importar tipo de pago
+      const { data: ventasMesData } = await supabase
+        .from('ventas')
+        .select('id')
+        .gte('fecha_venta', `${currentYear}-${String(currentMonth).padStart(2, '0')}-01`)
+        .lt('fecha_venta', `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`)
+        .neq('estado', 'cancelada');
       const ventasEsteMes = ventasMesData?.length || 0;
 
       setStats({
