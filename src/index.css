@@ -53,6 +53,16 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom color palette */
+    --sage: 175 13% 42%;
+    --sage-foreground: 0 0% 100%;
+    
+    --mint: 114 23% 79%;
+    --mint-foreground: 222.2 84% 4.9%;
+    
+    --earth: 44 8% 35%;
+    --earth-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -91,6 +101,16 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom color palette - Dark mode */
+    --sage: 175 13% 42%;
+    --sage-foreground: 0 0% 100%;
+    
+    --mint: 114 23% 79%;
+    --mint-foreground: 222.2 84% 4.9%;
+    
+    --earth: 44 8% 35%;
+    --earth-foreground: 0 0% 100%;
   }
 }
 
