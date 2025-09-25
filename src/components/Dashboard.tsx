@@ -53,11 +53,11 @@ const Dashboard = () => {
       <div className="min-h-screen flex w-full">
         <AppSidebar currentView={currentView} setCurrentView={setCurrentView} />
         <main className="flex-1 flex flex-col">
-          <header className="h-16 border-b flex items-center px-6">
+          <header className="h-16 border-b bg-sage/5 flex items-center px-6">
             <SidebarTrigger />
             <div className="ml-4">
-              <h1 className="text-2xl font-bold text-primary">Monte Sagrado</h1>
-              <p className="text-sm text-muted-foreground">Sistema de Gestión del Cementerio</p>
+              <h1 className="text-2xl font-bold text-sage">Monte Sagrado</h1>
+              <p className="text-sm text-earth">Sistema de Gestión del Cementerio</p>
             </div>
           </header>
           <div className="flex-1 p-6 overflow-auto">

@@ -134,87 +134,87 @@ export function DashboardHome() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold">Dashboard</h2>
-        <p className="text-muted-foreground">
-          Resumen general del sistema Monte Sagrado
-        </p>
-      </div>
+      <div className="space-y-6">
+        <div className="bg-gradient-to-r from-sage/10 to-mint/10 p-6 rounded-lg">
+          <h2 className="text-3xl font-bold text-sage">Dashboard</h2>
+          <p className="text-earth">
+            Resumen general del sistema Monte Sagrado
+          </p>
+        </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Clientes Activos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-sage/20 hover:shadow-lg hover:shadow-sage/10 transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-sage/5">
+            <CardTitle className="text-sm font-medium text-sage">Clientes Activos</CardTitle>
+            <Users className="h-4 w-4 text-sage" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.clientesActivos}</div>
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-earth">{stats.clientesActivos}</div>
             <p className="text-xs text-muted-foreground">
               Total de clientes registrados
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Terrenos Disponibles</CardTitle>
-            <MapPin className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-mint/30 hover:shadow-lg hover:shadow-mint/10 transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-mint/10">
+            <CardTitle className="text-sm font-medium text-sage">Terrenos Disponibles</CardTitle>
+            <MapPin className="h-4 w-4 text-sage" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.terrenosDisponibles}</div>
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-earth">{stats.terrenosDisponibles}</div>
             <p className="text-xs text-muted-foreground">
               Lotes listos para venta
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Ventas</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-earth/30 hover:shadow-lg hover:shadow-earth/10 transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-earth/5">
+            <CardTitle className="text-sm font-medium text-earth">Total Ventas</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-earth" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalVentas}</div>
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-sage">{stats.totalVentas}</div>
             <p className="text-xs text-muted-foreground">
               Ventas realizadas
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-sage/30 bg-gradient-to-br from-sage/5 to-mint/5 hover:shadow-lg hover:shadow-sage/20 transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos del Mes</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-sage">Ingresos del Mes</CardTitle>
+            <DollarSign className="h-4 w-4 text-sage" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.ingresosMensuales)}</div>
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-earth">{formatCurrency(stats.ingresosMensuales)}</div>
             <p className="text-xs text-muted-foreground">
               Ingresos de {new Date().toLocaleDateString('es-DO', { month: 'long' })}
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ventas Este Mes</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-mint/30 hover:shadow-lg hover:shadow-mint/10 transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-mint/10">
+            <CardTitle className="text-sm font-medium text-sage">Ventas Este Mes</CardTitle>
+            <TrendingUp className="h-4 w-4 text-sage" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.ventasEsteMes}</div>
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-earth">{stats.ventasEsteMes}</div>
             <p className="text-xs text-muted-foreground">
               Transacciones del mes actual
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Fecha Actual</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+        <Card className="border-earth/20 hover:shadow-lg hover:shadow-earth/10 transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-earth/5">
+            <CardTitle className="text-sm font-medium text-earth">Fecha Actual</CardTitle>
+            <Calendar className="h-4 w-4 text-earth" />
           </CardHeader>
-          <CardContent>
-            <div className="text-lg font-bold">
+          <CardContent className="pt-4">
+            <div className="text-lg font-bold text-sage">
               {new Date().toLocaleDateString('es-DO', {
                 weekday: 'long',
                 year: 'numeric',
