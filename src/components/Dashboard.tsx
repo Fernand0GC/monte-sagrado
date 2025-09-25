@@ -9,8 +9,9 @@ import { TerrenosView } from "@/components/TerrenosView";
 import { VentasView } from "@/components/VentasView";
 import { DashboardHome } from "@/components/DashboardHome";
 import { HistorialView } from "@/components/HistorialView";
+import PagosView from "@/components/PagosView";
 
-export type DashboardView = 'home' | 'clientes' | 'terrenos' | 'ventas' | 'historial';
+export type DashboardView = 'home' | 'clientes' | 'terrenos' | 'ventas' | 'historial' | 'pagos';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -40,6 +41,8 @@ const Dashboard = () => {
         return <VentasView />;
       case 'historial':
         return <HistorialView />;
+      case 'pagos':
+        return <PagosView />;
       default:
         return <DashboardHome />;
     }
