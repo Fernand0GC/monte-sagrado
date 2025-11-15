@@ -143,7 +143,7 @@ export function TerrenosView() {
         .eq('id', terreno.id);
 
       if (error) throw error;
-      
+
       toast({ title: "Terreno eliminado exitosamente" });
       loadTerrenos();
     } catch (error: any) {
@@ -168,9 +168,9 @@ export function TerrenosView() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-DO', {
+    return new Intl.NumberFormat('es-BO', {
       style: 'currency',
-      currency: 'DOP',
+      currency: 'BOB',
     }).format(amount);
   };
 
@@ -225,8 +225,8 @@ export function TerrenosView() {
                 {editingTerreno ? "Editar Terreno" : "Nuevo Terreno"}
               </DialogTitle>
               <DialogDescription>
-                {editingTerreno 
-                  ? "Modifica la información del terreno" 
+                {editingTerreno
+                  ? "Modifica la información del terreno"
                   : "Ingresa la información del nuevo terreno"
                 }
               </DialogDescription>
@@ -284,7 +284,7 @@ export function TerrenosView() {
                     <Label htmlFor="tipo">Tipo *</Label>
                     <Select
                       value={formData.tipo}
-                      onValueChange={(value: 'nicho' | 'boveda' | 'mausoleo') => 
+                      onValueChange={(value: 'nicho' | 'boveda' | 'mausoleo') =>
                         setFormData({ ...formData, tipo: value })
                       }
                       required
@@ -303,7 +303,7 @@ export function TerrenosView() {
                     <Label htmlFor="estado">Estado</Label>
                     <Select
                       value={formData.estado}
-                      onValueChange={(value: 'disponible' | 'vendido' | 'reservado') => 
+                      onValueChange={(value: 'disponible' | 'vendido' | 'reservado') =>
                         setFormData({ ...formData, estado: value })
                       }
                     >

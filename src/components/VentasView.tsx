@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Search, ShoppingCart, Eye } from "lucide-react";
+import { Plus, Search, ShoppingCart, Eye, Download } from "lucide-react";
+import { generateReciboVenta } from "@/lib/pdfGenerator";
 
 interface Cliente {
   id: string;
@@ -41,7 +42,7 @@ interface Venta {
   terrenos: Terreno;
 }
 
-export function VentasView() {
+export default function VentasView() {
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [terrenos, setTerrenos] = useState<Terreno[]>([]);
@@ -49,7 +50,11 @@ export function VentasView() {
   const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
-  const [selectedVenta, setSelectedVenta] = useState<string | null>(null);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [selectedVenta, setSelectedVenta] = useState<Venta | null>(null);
+  const [selectedVentaId, setSelectedVentaId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const [creditData, setCreditData] = useState({
     numCuotas: "",
     tasaInteres: "10"
@@ -152,7 +157,7 @@ export function VentasView() {
 
       // Si es a crédito, abrir diálogo para configurar cuotas
       if (formData.tipo_pago === 'credito') {
-        setSelectedVenta(ventaData.id);
+        setSelectedVentaId(ventaData.id);
         setCreditDialogOpen(true);
       } else {
         setDialogOpen(false);
@@ -173,10 +178,10 @@ export function VentasView() {
   const handleCreditSetup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (!selectedVenta) return;
+      if (!selectedVentaId) return;
 
       const { error } = await supabase.rpc('generar_cuotas_credito', {
-        venta_uuid: selectedVenta,
+        venta_uuid: selectedVentaId,
         num_cuotas: parseInt(creditData.numCuotas),
         tasa_interes: parseFloat(creditData.tasaInteres) / 100
       });
@@ -212,7 +217,7 @@ export function VentasView() {
       numCuotas: "",
       tasaInteres: "10"
     });
-    setSelectedVenta(null);
+    setSelectedVentaId(null);
   };
 
   const handleTerrenoChange = (terrenoId: string) => {
@@ -227,9 +232,17 @@ export function VentasView() {
   const filteredVentas = ventas.filter(venta =>
     venta.clientes.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     venta.clientes.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    venta.clientes.cedula.includes(searchTerm) ||
     venta.terrenos.numero_lote.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredVentas.slice(indexOfFirstItem, indexOfLastItem);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredVentas.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   const openNewVentaDialog = () => {
     resetForm();
@@ -467,7 +480,7 @@ export function VentasView() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredVentas.map((venta) => (
+                {currentItems.map((venta) => (
                   <TableRow key={venta.id}>
                     <TableCell className="font-medium">
                       {venta.clientes.nombre} {venta.clientes.apellido}
@@ -488,23 +501,132 @@ export function VentasView() {
                       {getTipoPagoBadge(venta.tipo_pago)}
                     </TableCell>
                     <TableCell>
-                      {new Date(venta.fecha_venta).toLocaleDateString('es-DO')}
+                      {new Date(venta.fecha_venta).toLocaleDateString('es-BO')}
                     </TableCell>
                     <TableCell>
                       {getEstadoBadge(venta.estado)}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const doc = generateReciboVenta({
+                              id: venta.id,
+                              cliente: {
+                                nombre: venta.clientes.nombre,
+                                apellido: venta.clientes.apellido,
+                                cedula: venta.clientes.cedula
+                              },
+                              terreno: {
+                                numero_lote: venta.terrenos.numero_lote,
+                                seccion: venta.terrenos.seccion,
+                                manzana: venta.terrenos.manzana,
+                                tipo: venta.terrenos.tipo
+                              },
+                              precio_total: venta.precio_total,
+                              tipo_pago: venta.tipo_pago,
+                              fecha_venta: venta.fecha_venta
+                            });
+                            doc.save(`recibo_venta_${venta.id.substring(0, 8)}.pdf`);
+                          }}
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedVenta(venta);
+                            setDetailsDialogOpen(true);
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           )}
+
+          {/* Paginación */}
+          {pageNumbers.length > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </Button>
+              {pageNumbers.map(number => (
+                <Button
+                  key={number}
+                  variant={currentPage === number ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(number)}
+                >
+                  {number}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, pageNumbers.length))}
+                disabled={currentPage === pageNumbers.length}
+              >
+                Siguiente
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Diálogo de detalles de venta */}
+      <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Detalles de la Venta</DialogTitle>
+          </DialogHeader>
+          {selectedVenta && (
+            <div className="space-y-4">
+              <div>
+                <Label className="font-bold">Cliente</Label>
+                <p>{selectedVenta.clientes.nombre} {selectedVenta.clientes.apellido}</p>
+                <p className="text-sm text-muted-foreground">Cédula: {selectedVenta.clientes.cedula}</p>
+              </div>
+              <div>
+                <Label className="font-bold">Terreno</Label>
+                <p>Lote: {selectedVenta.terrenos.numero_lote}</p>
+                <p className="text-sm text-muted-foreground">
+                  Sección: {selectedVenta.terrenos.seccion} | Manzana: {selectedVenta.terrenos.manzana}
+                </p>
+                <p className="text-sm text-muted-foreground">Tipo: {selectedVenta.terrenos.tipo}</p>
+              </div>
+              <div>
+                <Label className="font-bold">Información de Pago</Label>
+                <p>Precio Total: {formatCurrency(selectedVenta.precio_total)}</p>
+                <p>Tipo de Pago: {selectedVenta.tipo_pago === 'contado' ? 'Contado' : 'Crédito'}</p>
+                <p>Fecha: {new Date(selectedVenta.fecha_venta).toLocaleDateString('es-BO')}</p>
+                <p>Estado: {selectedVenta.estado}</p>
+              </div>
+              {selectedVenta.observaciones && (
+                <div>
+                  <Label className="font-bold">Observaciones</Label>
+                  <p className="text-sm">{selectedVenta.observaciones}</p>
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={() => setDetailsDialogOpen(false)}>Cerrar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

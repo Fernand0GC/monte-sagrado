@@ -1,4 +1,4 @@
-import { Home, Users, MapPin, ShoppingCart, History, CreditCard, LogOut } from "lucide-react";
+import { Home, Users, MapPin, ShoppingCart, History, CreditCard, LogOut, FileText } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +19,7 @@ const menuItems = [
   { id: 'terrenos' as DashboardView, title: "Terrenos", icon: MapPin },
   { id: 'ventas' as DashboardView, title: "Ventas", icon: ShoppingCart },
   { id: 'pagos' as DashboardView, title: "Pagos", icon: CreditCard },
+  { id: 'reportes' as DashboardView, title: "Reportes", icon: FileText },
   { id: 'historial' as DashboardView, title: "Historial", icon: History },
 ];
 
